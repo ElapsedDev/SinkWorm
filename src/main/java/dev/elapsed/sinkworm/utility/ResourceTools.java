@@ -1,9 +1,11 @@
 package dev.elapsed.sinkworm.utility;
 
 import dev.elapsed.sinkworm.database.Configurations;
+import spark.QueryParamsMap;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ResourceTools {
@@ -27,13 +29,34 @@ public class ResourceTools {
         }
     }
 
-    public static boolean isNullOrEmpty(String value) {
-
-        return value == null || value.isEmpty();
+    public static String translateQueryParam(Map<String, String> params) {
+        StringBuilder builder = new StringBuilder();
+        params.forEach((key, value) -> builder.append("").append(key).append("=").append(value).append(", "));
+        return builder.toString();
     }
 
-    public static boolean isNullOrEmpty(Integer value) {
-        return value == null;
-    }
+    public static String translateQueryParam(QueryParamsMap params) {
 
+        StringBuilder builder = new StringBuilder();
+
+        for (Map.Entry<String, String[]> entry : params.toMap().entrySet()) {
+            builder.append(entry.getKey()).append("=");
+            String[] values = entry.getValue();
+            if (values.length == 1) {
+                builder.append(values[0]);
+            } else {
+                builder.append("[");
+                for (int i = 0; i < values.length; i++) {
+                    builder.append(values[i]);
+                    if (i < values.length - 1) {
+                        builder.append(", ");
+                    }
+                }
+                builder.append("]");
+            }
+            builder.append(", ");
+        }
+
+        return builder.toString();
+    }
 }

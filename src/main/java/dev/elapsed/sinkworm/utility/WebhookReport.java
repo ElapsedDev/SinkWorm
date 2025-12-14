@@ -27,12 +27,33 @@ public final class WebhookReport {
 
         Embed embed = new Embed();
 
-        embed.setTitle("IP Address: " + request.ip() + " | " + moduleTitle);
-        embed.setDescription("Total Queries [" + data.getConnectionCount() + "] | Paths Logged [" + data.getQueryPaths().size() + "]");
+        embed.setTitle("IP Address: " + request.ip() + " [ " + moduleTitle + "]");
+        embed.setDescription("**Total Queries** [" + data.getConnectionCount() + "] | **Paths Logged** [" + data.getQueryPaths().size() + "]");
         embed.addField("Method", request.requestMethod(), true);
         embed.addField("Param Count", String.valueOf(request.queryParams().size()), true);
-        embed.addField("Path", request.pathInfo(), false);
+        embed.addField("Path", (data.getQueryPaths().containsKey(request.pathInfo()) ? "[NEW]" : "[OLD]") + request.pathInfo(), false);
         embed.addField("User Agent", request.userAgent(), false);
+
+        if (!request.queryParams().isEmpty()) {
+            embed.addField("Query Params - A", ResourceTools.translateQueryParam(request.queryMap()), false);
+        }
+
+        if (request.params().isEmpty()) {
+            embed.addField("Query Params - B", ResourceTools.translateQueryParam(request.params()), false);
+        }
+
+        if (request.splat().length > 0) {
+            embed.addField("Splat", String.join(", ", request.splat()), false);
+        }
+
+        if (!request.headers().isEmpty()) {
+            embed.addField("Headers" , String.join(", ", request.headers()), false);
+        }
+
+        if (!request.body().isBlank()) {
+            embed.addField("Body", request.body(), false);
+        }
+
         embed.setFooterText(new Date().toString());
         embed.setColor(0x808080);
 
