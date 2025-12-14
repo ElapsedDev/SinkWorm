@@ -31,18 +31,18 @@ public final class WebhookReport {
         embed.setDescription("**Total Queries** [" + data.getConnectionCount() + "] | **Paths Logged** [" + data.getQueryPaths().size() + "]");
         embed.addField("Method", request.requestMethod(), true);
         embed.addField("Param Count", String.valueOf(request.queryParams().size()), true);
-        embed.addField("Path", (data.getQueryPaths().containsKey(request.pathInfo()) ? "[NEW]" : "[OLD]") + request.pathInfo(), false);
+        embed.addField("Path", (data.getQueryPaths().containsKey(request.pathInfo()) ? "[NEW] " : "[OLD] ") + request.pathInfo(), false);
         embed.addField("User Agent", request.userAgent(), false);
 
         if (!request.queryParams().isEmpty()) {
             embed.addField("Query Params - A", ResourceTools.translateQueryParam(request.queryMap()), false);
         }
 
-        if (request.params().isEmpty()) {
+        if (!request.params().isEmpty()) {
             embed.addField("Query Params - B", ResourceTools.translateQueryParam(request.params()), false);
         }
 
-        if (request.splat().length > 0) {
+        if (request.splat().length >= 1) {
             embed.addField("Splat", String.join(", ", request.splat()), false);
         }
 

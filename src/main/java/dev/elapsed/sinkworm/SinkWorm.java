@@ -54,6 +54,7 @@ public class SinkWorm {
         persist = new Persist();
         // Additional initialization logic can be added here
         QueryDatabase.load();
+        Configurations.load();
 
         setupConfiguration();
         setupModules();
@@ -116,7 +117,6 @@ public class SinkWorm {
     private void shutdownServer(boolean isShutdownHook) {
         try {
             Logger.getLogger(Configurations.LOGGER_TITLE).info("[Shutdown] Initiating server shutdown...");
-            Configurations.save();
             QueryDatabase.save();
 
             Logger.getLogger(Configurations.LOGGER_TITLE).info("[Shutdown] Stopping Spark server...");

@@ -2,17 +2,19 @@ package dev.elapsed.sinkworm.database;
 
 import dev.elapsed.sinkworm.SinkWorm;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Configurations {
 
     private static transient Configurations instance = new Configurations();
 
-    public static final String WEBHOOK_URL = "";
-    public static final String ALERT_BOT_USERNAME = "BotSniffer";
-    public static final String ALERT_BOT_AVATAR_URL = "";
+    public static String WEBHOOK_URL = "";
+    public static String ALERT_BOT_USERNAME = "BotSniffer";
+    public static String ALERT_BOT_AVATAR_URL = "";
 
-    public static final Set<String> TRUSTED_IPS = Set.of("");
+    public static Set<String> TRUSTED_IPS = new HashSet<>();
     public static String LOGGER_TITLE = "[SinkWorm]";
     public static int SERVER_PORT = 8080;
     public static int MAX_THREADS = 5;
