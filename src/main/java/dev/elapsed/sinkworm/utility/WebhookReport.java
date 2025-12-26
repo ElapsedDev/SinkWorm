@@ -31,7 +31,7 @@ public final class WebhookReport {
         embed.setDescription("**Total Queries** [" + data.getConnectionCount() + "] | **Paths Logged** [" + data.getQueryPaths().size() + "]");
         embed.addField("Method", request.requestMethod(), true);
         embed.addField("Param Count", String.valueOf(request.queryParams().size()), true);
-        embed.addField("Path", (data.getQueryPaths().containsKey(request.pathInfo()) ? "[NEW] " : "[OLD] ") + request.pathInfo(), false);
+        embed.addField((data.getQueryPaths().containsKey(request.pathInfo()) ? "[NEW] " : "[OLD] ") + " Path", request.pathInfo(), false);
         embed.addField("User Agent", request.userAgent(), false);
 
         if (!request.queryParams().isEmpty()) {

@@ -1,4 +1,4 @@
-package dev.elapsed.sinkworm.modules;
+package dev.elapsed.sinkworm.modules.honepot;
 
 import spark.Request;
 import spark.Route;

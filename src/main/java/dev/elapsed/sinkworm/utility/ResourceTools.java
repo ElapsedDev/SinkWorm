@@ -1,14 +1,69 @@
 package dev.elapsed.sinkworm.utility;
 
 import dev.elapsed.sinkworm.database.Configurations;
+import dev.elapsed.sinkworm.database.data.MetaData;
+import dev.elapsed.sinkworm.database.data.QueryData;
 import spark.QueryParamsMap;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class ResourceTools {
+
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    .withZone(ZoneId.systemDefault());
+
+    public static String formatDate(long timestamp) {
+        return DATE_FORMATTER.format(Instant.ofEpochMilli(timestamp));
+    }
+
+    public static long computeLastSeen(QueryData data) {
+
+        long last = data.getFirstConnection();
+
+        Map<String, List<Long>> paths = data.getQueryPaths();
+        if (paths != null) {
+            for (List<Long> timestamps : paths.values()) {
+                if (timestamps != null && !timestamps.isEmpty()) {
+                    long lastTimestamp = timestamps.getLast();
+                    if (lastTimestamp > last) last = lastTimestamp;
+                }
+            }
+        }
+
+        Map<String, MetaData> meta = data.getMetadata();
+        if (meta != null) {
+            for (MetaData m : meta.values()) {
+                if (m != null && m.getTime() > last) last = m.getTime();
+            }
+        }
+
+        return last;
+    }
+
+    public static <K, V> Map<K, V> safeMap(Map<K, V> map) {
+        return map == null ? Map.of() : map;
+    }
+
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    public static int parseInt(String raw, int def) {
+        if (raw == null) return def;
+        try {
+            return Integer.parseInt(raw);
+        } catch (Exception ignored) {
+            return def;
+        }
+    }
 
     public static String readResource(String path) {
 

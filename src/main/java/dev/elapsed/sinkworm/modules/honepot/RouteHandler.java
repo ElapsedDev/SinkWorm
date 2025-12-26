@@ -1,4 +1,4 @@
-package dev.elapsed.sinkworm.modules;
+package dev.elapsed.sinkworm.modules.honepot;
 
 import dev.elapsed.sinkworm.SinkWorm;
 import dev.elapsed.sinkworm.database.Configurations;

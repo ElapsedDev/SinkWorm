@@ -1,4 +1,4 @@
-package dev.elapsed.sinkworm.modules;
+package dev.elapsed.sinkworm.modules.honepot;
 
 public enum RouteModules {
 

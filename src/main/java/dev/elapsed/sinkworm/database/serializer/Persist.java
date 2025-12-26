@@ -3,6 +3,7 @@ package dev.elapsed.sinkworm.database.serializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.elapsed.sinkworm.database.Configurations;
+import lombok.Getter;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 public class Persist {
 
+    @Getter
     private final Gson gson = buildGson().create();
 
     public static String getName(Class<?> clazz) {

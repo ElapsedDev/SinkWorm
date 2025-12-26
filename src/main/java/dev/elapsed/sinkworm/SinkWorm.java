@@ -4,7 +4,12 @@ import dev.elapsed.sinkworm.database.Configurations;
 import dev.elapsed.sinkworm.database.QueryDatabase;
 import dev.elapsed.sinkworm.database.data.QueryData;
 import dev.elapsed.sinkworm.database.serializer.Persist;
-import dev.elapsed.sinkworm.modules.*;
+import dev.elapsed.sinkworm.modules.CorsFilter;
+import dev.elapsed.sinkworm.modules.honepot.*;
+import dev.elapsed.sinkworm.modules.queries.IPDetailResponse;
+import dev.elapsed.sinkworm.modules.queries.IndexResponse;
+import dev.elapsed.sinkworm.modules.queries.SummaryResponse;
+import dev.elapsed.sinkworm.modules.queries.TimelineResponse;
 import lombok.Getter;
 import spark.Request;
 import spark.Response;
@@ -93,26 +98,23 @@ public class SinkWorm {
 
         routeHandler = new RouteHandler();
 
-        before((request, response) -> {
-            Logger.getLogger(Configurations.LOGGER_TITLE).info("Incoming " + request.requestMethod() + " request to " + request.pathInfo() + " from IP: " + request.ip());
+        new CorsFilter().apply();
+
+        path("/sinkworm-api/v1", () -> {
+            get("/summary", new SummaryResponse());
+            get("/index", new IndexResponse());
+            get("/ip/:address", new IPDetailResponse());
+            get("/timeline", new TimelineResponse());
         });
+
+        get("/*", routeHandler);
+        post("/*", routeHandler);
+        put("/*", routeHandler);
+        delete("/*", routeHandler);
 
         notFound(routeHandler);
-
-        path("*", () -> {
-
-            get("/*", routeHandler);
-            post("/*", routeHandler);
-            put("/*", routeHandler);
-            delete("/*", routeHandler);
-            options("/*", (request, response) -> {
-                response.header("Allow", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-                response.status(200);
-                return "OK";
-            });
-        });
-
     }
+
 
     private void shutdownServer(boolean isShutdownHook) {
         try {
